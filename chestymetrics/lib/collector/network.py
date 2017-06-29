@@ -8,7 +8,7 @@ from ..collector.collector import BaseCollector
 
 class NetworkMetricsCollector(BaseCollector):
     def __init__(self):
-        self.last_counters = None
+        self.last_counters = {}
         self.last_collect_time = datetime.datetime.now()
 
     def collect_metrics(self):
@@ -19,7 +19,7 @@ class NetworkMetricsCollector(BaseCollector):
         collect_interval = 1 if collect_interval < 1 else collect_interval
 
         messages = [
-            Message('net/' + k + '/sec', (v - self.last_counters[k]) / collect_interval)
+            Message('net/' + k + '/sec', (v - self.last_counters.get(k, 0)) / collect_interval)
             for k, v in network_stats.items()
         ]
 
